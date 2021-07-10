@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:convert/convert.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -6,7 +8,8 @@ import 'package:flutter_blue_beacon/utils.dart';
 import 'package:quiver/core.dart';
 export 'package:flutter_blue/flutter_blue.dart' show ScanResult;
 
-const EddystoneServiceId = "0000feaa-0000-1000-8000-00805f9b34fb";
+var EddystoneServiceId = "0000feaa-0000-1000-8000-00805f9b34fb";
+const EddystoneServiceIdIOS = "FEAA";
 const IBeaconManufacturerId = 0x004C;
 
 // This file defines type that are considered as a valid beacon.
@@ -39,6 +42,12 @@ abstract class Beacon {
 
   // Returns the first found beacon protocol in one device
   static List<Beacon> fromScanResult(ScanResult scanResult) {
+    if (Platform.isAndroid) {
+      EddystoneServiceId = "0000feaa-0000-1000-8000-00805f9b34fb";
+    } else if (Platform.isIOS) {
+      EddystoneServiceId = EddystoneServiceIdIOS;
+    }
+    print("eddt=ystone ========= $EddystoneServiceId");
     return <Beacon>[
       EddystoneUID.fromScanResult(scanResult),
       EddystoneEID.fromScanResult(scanResult),
@@ -82,6 +91,8 @@ class EddystoneUID extends Eddystone {
         18) {
       return null;
     }
+    print("scanResult.advertisementData.serviceData[EddystoneServiceId][0]");
+    print(scanResult.advertisementData.serviceData[EddystoneServiceId][0]);
     if (scanResult.advertisementData.serviceData[EddystoneServiceId][0] !=
         0x00) {
       return null;
