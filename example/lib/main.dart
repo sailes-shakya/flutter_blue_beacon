@@ -39,17 +39,17 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
   void initState() {
     super.initState();
     // Immediately get the state of FlutterBlue
-    _flutterBlue.state.then((s) {
+    _flutterBlue.state.listen((s) {
       setState(() {
         state = s;
       });
     });
     // Subscribe to state changes
-    _stateSubscription = _flutterBlue.onStateChanged().listen((s) {
-      setState(() {
-        state = s;
-      });
-    });
+    // _stateSubscription = _flutterBlue.onStateChanged().listen((s) {
+    //   setState(() {
+    //     state = s;
+    //   });
+    // });
   }
 
   @override
